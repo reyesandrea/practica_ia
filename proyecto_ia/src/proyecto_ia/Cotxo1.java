@@ -30,7 +30,7 @@ public class Cotxo1 extends Agent {
     static final int DRETA = 2;
     static final int COTXE = 1;
     static final int PARET = 0;
-   
+
     int VELOCITATTOPE = 5;
     int VELOCITATFRE = 3;
 
@@ -68,8 +68,8 @@ public class Cotxo1 extends Agent {
                 //Colisión frontal
                 if (estat.enCollisio && estat.distanciaVisors[CENTRAL] < 15) { // evita fer-ho marxa enrera
                     noGiris();
-                    
-                   if (estat.distanciaVisors[CENTRAL] > 20) {
+
+                    if (estat.distanciaVisors[CENTRAL] > 20) {
                         endavant(4);
                         return;
                     }
@@ -78,22 +78,25 @@ public class Cotxo1 extends Agent {
                     espera = 30;
                     return;
 
-                    
-                }else if(estat.enCollisio ){
-                    setAngleVisors(90);
-                    if(estat.distanciaVisors[ESQUERRA]<10){
+                } else if (estat.enCollisio) {
+                    noGiris();
+                    //setAngleVisors(89);
+                    enrere(4);
+                    System.out.println("Distancia izquierda: " + estat.distanciaVisors[ESQUERRA]);
+                    System.out.println("Distancia derecha: " + estat.distanciaVisors[DRETA]);
+                    System.out.println("Distancia central: " + estat.distanciaVisors[CENTRAL]);
+                    if (estat.distanciaVisors[ESQUERRA] < 80) {
                         dreta();
-                        endavant(2);
-                    }
-                    if(estat.distanciaVisors[DRETA]<10){
+                        //endavant(2);
+                    }else if (estat.distanciaVisors[DRETA] < 80) {
                         esquerra();
-                        endavant(2);
+                        //endavant(2);
                     }
-                    
+                    espera = 15;
+                    //setAngleVisors(40);
+                    return;
                 }
-                    
-                
-               
+
                 ddreta = estat.distanciaVisors[DRETA];
                 desquerra = estat.distanciaVisors[ESQUERRA];
                 dcentral = estat.distanciaVisors[CENTRAL];
@@ -141,17 +144,43 @@ public class Cotxo1 extends Agent {
                 //Esquivar obstaculo central, dependiendo de la distancia lateral con la pared
                 if (dcentral <= 70) {//70
                     if (estat.objecteVisor[CENTRAL] == COTXE || (estat.objecteVisor[CENTRAL] == 2 && estat.objectes[estat.indexObjecte[CENTRAL]].tipus == Agent.TACAOLI)) {
-                        if (estat.objecteVisor[ESQUERRA] == PARET && desquerra < 30) {
+                        if (estat.objecteVisor[ESQUERRA] == PARET && desquerra < 25) {
                             dreta();
-                           
+
                         } else if (estat.objecteVisor[DRETA] == PARET && ddreta < 30) {
                             esquerra();
-                            
+
+                        }
+                    } else if (estat.objecteVisor[CENTRAL] == 2) {
+                        if (estat.objectes[estat.indexObjecte[CENTRAL]].tipus == Agent.TACAOLI) {
+                            dreta();
+                        } else if (estat.objectes[estat.indexObjecte[CENTRAL]].tipus == Agent.OLI
+                                || estat.objectes[estat.indexObjecte[CENTRAL]].tipus == Agent.RECURSOS) {
+                            endavant(4);
+                        }
+                    }
+                } else {
+                    if (estat.objecteVisor[CENTRAL] == 2) {
+                        switch (estat.objectes[estat.indexObjecte[CENTRAL]].tipus) {
+                            case Agent.TACAOLI:
+                                dreta();
+                                break;
+                            case Agent.OLI:
+                                endavant(4);
+                                System.out.println("OLI ENCONTRADO");
+                                break;
+                            case Agent.RECURSOS:
+                                endavant(4);
+                                System.out.println("RECURSOS ENCONTRADOS");
+                                break;
+                            default:
+                                endavant(4);
+                                break;
                         }
                     }
                 }
-                
-                   
+
+                // ESQUIVAR OBSTACULO IZQUIERDA
                 if (estat.objecteVisor[ESQUERRA] == COTXE) {
                     dreta();
                 } else if (estat.objecteVisor[ESQUERRA] == 2) {
@@ -161,21 +190,18 @@ public class Cotxo1 extends Agent {
                             || estat.objectes[estat.indexObjecte[ESQUERRA]].tipus == Agent.RECURSOS) {
                         esquerra();
                     }
-                }
-                else if (estat.objecteVisor[DRETA] == COTXE) {
+                } else if (estat.objecteVisor[DRETA] == COTXE) { // ESQUIVAR OBSTACULO DERECHA
                     esquerra();
                 } else if (estat.objecteVisor[DRETA] == 2) {
                     if (estat.objectes[estat.indexObjecte[DRETA]].tipus == Agent.TACAOLI) {
                         esquerra();
-                    }
-                    else if (estat.objectes[estat.indexObjecte[DRETA]].tipus == Agent.OLI
+                    } else if (estat.objectes[estat.indexObjecte[DRETA]].tipus == Agent.OLI
                             || estat.objectes[estat.indexObjecte[DRETA]].tipus == Agent.RECURSOS) {
-                        
+
                         dreta();
                     }
                 }
-              
-                
+
                 //CONTRADIRECCIÓN
                 /**
                  * Semejante a la colision, le decimos que si detecta que esta
@@ -190,7 +216,7 @@ public class Cotxo1 extends Agent {
                     if (estat.contraDireccio) {
                         if (ddreta < 20 && estat.objecteVisor[DRETA] == PARET) {
                             esquerra();
-                           // return;
+                            // return;
                         } else if (desquerra < 20 && estat.objecteVisor[ESQUERRA] == PARET) {
                             dreta();
                             //return;
@@ -202,6 +228,7 @@ public class Cotxo1 extends Agent {
                         return;
                     }
                 }
+
                 //Disparar
                 /**
                  * Dispar al rival en un rango entr 50 y 350, para poder
@@ -226,8 +253,7 @@ public class Cotxo1 extends Agent {
                     noGiris();
                     return;
                 }
-                
-                
+
                 if (ddreta > desquerra) {
                     dreta();
                     posaOli();
@@ -237,7 +263,7 @@ public class Cotxo1 extends Agent {
                 }
                 endavant(VELOCITATFRE);
             }
-            
+
         }
     }
 }
