@@ -240,11 +240,11 @@ public class Cotxo1 extends Agent {
                 if (sector_rival == 2) {
                     dreta();
                     System.out.println("Encontre rival ");
-                   
+
                 } else if (sector_rival == 3) {
                     esquerra();
                     System.out.println("Encontre rival ");
-                    
+
                 }
 
                 //Disparar
@@ -252,15 +252,17 @@ public class Cotxo1 extends Agent {
                  * Dispar al rival en un rango entr 50 y 350, para poder
                  * gestionar las balas y no haga gaste tan rapido
                  */
-                if (estat.objecteVisor[CENTRAL] == COTXE) {
-                    if (50 < dcentral && dcentral < 400) {//350
-                        dispara();
-                    }
-                    if (dcentral < 60) {
-                        if (ddreta >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
-                            esquerra();
-                        } else if (desquerra >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
-                            dreta();
+                if (estat.bales > 0) {
+                    if (estat.objecteVisor[CENTRAL] == COTXE) {
+                        if (50 < dcentral && dcentral < 400) {//350
+                            dispara();
+                        }
+                        if (dcentral < 60) {
+                            if (ddreta >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
+                                esquerra();
+                            } else if (desquerra >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
+                                dreta();
+                            }
                         }
                     }
                 }
@@ -274,10 +276,15 @@ public class Cotxo1 extends Agent {
 
                 if (ddreta > desquerra) {
                     dreta();
-                    posaOli();
+                    if (estat.oli > 0) {
+                        posaOli();
+                    }
+
                 } else {
                     esquerra();
-                    posaOli();
+                    if (estat.oli > 0) {
+                        posaOli();
+                    }
                 }
                 endavant(VELOCITATFRE);
             }
