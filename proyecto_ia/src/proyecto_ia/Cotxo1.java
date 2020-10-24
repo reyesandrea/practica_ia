@@ -40,7 +40,7 @@ public class Cotxo1 extends Agent {
     double desquerra, ddreta, dcentral;
 
     public Cotxo1(Agents pare) {
-        super(pare, "Cotxo", "imatges/CotxoV.png");
+        super(pare, "Cotxo1", "imatges/CotxoV.png");
     }
 
     @Override
@@ -88,7 +88,7 @@ public class Cotxo1 extends Agent {
                     if (estat.distanciaVisors[ESQUERRA] < 80) {
                         dreta();
                         //endavant(2);
-                    }else if (estat.distanciaVisors[DRETA] < 80) {
+                    } else if (estat.distanciaVisors[DRETA] < 80) {
                         esquerra();
                         //endavant(2);
                     }
@@ -147,7 +147,7 @@ public class Cotxo1 extends Agent {
                         if (estat.objecteVisor[ESQUERRA] == PARET && desquerra < 25) {
                             dreta();
 
-                        } else if (estat.objecteVisor[DRETA] == PARET && ddreta < 30) {
+                        } else if (estat.objecteVisor[DRETA] == PARET && ddreta < 25) {
                             esquerra();
 
                         }
@@ -228,21 +228,41 @@ public class Cotxo1 extends Agent {
                         return;
                     }
                 }
+                //Buscar id del rival
+                int id_rival, sector_rival;
+                if (estat.id != 0) {
+                    id_rival = 0;
+                } else {
+                    id_rival = 1;
+                }
+                //Seguir el rival para poder disparar
+                sector_rival = estat.sector[id_rival];
+                if (sector_rival == 2) {
+                    dreta();
+                    System.out.println("Encontre rival ");
+
+                } else if (sector_rival == 3) {
+                    esquerra();
+                    System.out.println("Encontre rival ");
+
+                }
 
                 //Disparar
                 /**
                  * Dispar al rival en un rango entr 50 y 350, para poder
                  * gestionar las balas y no haga gaste tan rapido
                  */
-                if (estat.objecteVisor[CENTRAL] == COTXE) {
-                    if (50 < dcentral && dcentral < 350) {
-                        dispara();
-                    }
-                    if (dcentral < 60) {
-                        if (ddreta >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
-                            esquerra();
-                        } else if (desquerra >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
-                            dreta();
+                if (estat.bales > 0) {
+                    if (estat.objecteVisor[CENTRAL] == COTXE) {
+                        if (50 < dcentral && dcentral < 350) {
+                            dispara();
+                        }
+                        if (dcentral < 60) {
+                            if (ddreta >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
+                                esquerra();
+                            } else if (desquerra >= 30 && (estat.sector[2] == COTXE || estat.sector[2] == TACAOLI)) {
+                                dreta();
+                            }
                         }
                     }
                 }
@@ -256,10 +276,15 @@ public class Cotxo1 extends Agent {
 
                 if (ddreta > desquerra) {
                     dreta();
-                    posaOli();
+                    if (estat.oli > 0) {
+                        posaOli();
+                    }
+
                 } else {
                     esquerra();
-                    posaOli();
+                    if (estat.oli > 0) {
+                        posaOli();
+                    }
                 }
                 endavant(VELOCITATFRE);
             }
