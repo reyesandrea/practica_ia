@@ -254,7 +254,7 @@ public class Cotxo1 extends Agent {
                  */
                 if (estat.bales > 0) {
                     if (estat.objecteVisor[CENTRAL] == COTXE) {
-                        if (50 < dcentral && dcentral < 400) {//350
+                        if (50 < dcentral && dcentral < 350) {
                             dispara();
                         }
                         if (dcentral < 60) {
